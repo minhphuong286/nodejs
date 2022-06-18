@@ -41,7 +41,7 @@ let handleCreateNewUser = async (req, res) => {
     let newUser = await userService.createNewUser(data);
     // console.log('check newUser controller',newUser)
     if (newUser.errCode !== 0) {
-        return res.status(500).json({
+        return res.status(200).json({
             errCode: newUser.errCode,
             message: newUser.message,
     
