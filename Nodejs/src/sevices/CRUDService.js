@@ -95,13 +95,17 @@ let deleteUser = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             let user = await db.User.findOne({
-                where: { id: userId }
+                where: { id: userId }, 
+                raw:true
             })
             if (user) {
-                user.destroy();
-                resolve();
+                // console.log(user)
+                await db.User.destroy({
+                    where: { id: userId }, 
+                    raw:true 
+                });
             }
-            
+            resolve();
         } catch (e) {
             reject(e)
         }
