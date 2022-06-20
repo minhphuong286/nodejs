@@ -1,6 +1,6 @@
 import userService from '../sevices/userService';
 
-let handleLogin = async(req, res) => {
+let handleLogin = async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
     if (!email || !password) {
@@ -44,7 +44,7 @@ let handleCreateNewUser = async (req, res) => {
         return res.status(200).json({
             errCode: newUser.errCode,
             message: newUser.message,
-    
+
         })
     }
     return res.status(200).json({
@@ -61,7 +61,7 @@ let handleEditUser = async (req, res) => {
         return res.status(500).json({
             errCode: checkAct.errCode,
             message: checkAct.message,
-    
+
         })
     }
     return res.status(200).json({
@@ -72,13 +72,14 @@ let handleEditUser = async (req, res) => {
 
 let handleDelUser = async (req, res) => {
     let userId = req.body.id;
+    // console.log('---CHECK from controller: ', userId)
     let checkAct = await userService.deleteUser(userId);
     // console.log('check newUser controller',newUser)
     if (checkAct.errCode !== 0) {
-        return res.status(500).json({
+        return res.status(200).json({
             errCode: checkAct.errCode,
             message: checkAct.message,
-    
+
         })
     }
     return res.status(200).json({

@@ -14,8 +14,8 @@ let getHomePage = async (req, res) => {
     } catch (e) {
         console.log(e)
     }
-    
-    
+
+
 }
 let getAboutPage = (req, res) => {
     return res.render('test/about.ejs')
@@ -44,23 +44,24 @@ let displayGetCRUD = async (req, res) => {
     })
 }
 
-let editCRUD = async(req, res) => {
+let editCRUD = async (req, res) => {
     let userId = req.query.id;
     if (userId) {
-        let userData = await CRUDService.getUserInforById(userId);    
+        let userData = await CRUDService.getUserInforById(userId);
         // check existence of user
         if (userData) {
             return res.render('editCRUD.ejs', {
                 user: userData,
-            })    
+            })
         }
-        
+
     } else {
-        return res.send('Not found User (id) from homeController')    
-    } 
+        return res.send('Not found User (id) from homeController')
+    }
 }
-let putCRUD = async(req, res) => {
+let putCRUD = async (req, res) => {
     let data = req.body;
+    console.log("body", req.body)
     let allUsers = await CRUDService.updateUserData(data);
     return res.redirect('/get-crud');
     // return res.render('displayCRUD.ejs', {
@@ -77,7 +78,7 @@ module.exports = {
     getHomePage: getHomePage,
     getAboutPage: getAboutPage,
     getCRUD: getCRUD,
-    
+
     postCRUD: postCRUD,
     displayGetCRUD: displayGetCRUD,
     editCRUD: editCRUD,

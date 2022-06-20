@@ -10,8 +10,8 @@ let createNewUser = async (data) => {
             await db.User.create({
                 email: data.email,
                 password: hashPasswordByBcrypt,
-                firstName: data.firstname,
-                lastName: data.lastname,
+                firstName: data.firstName,
+                lastName: data.lastName,
                 address: data.address,
                 phonenumber: data.phoneNb,
                 gender: data.gender === '1' ? true : false,
@@ -53,7 +53,7 @@ let getAllUsers = () => {
 }
 
 let getUserInforById = (userId) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             let user = await db.User.findOne({
                 where: { id: userId },
@@ -75,9 +75,11 @@ let updateUserData = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             let user = await db.User.findOne({
-                where: {id: data.id}
+                where: { id: data.id },
+                raw: false
             })
             if (user) {
+                console.log('check-----------------', data)
                 user.firstName = data.firstName;
                 user.lastName = data.lastName;
                 user.address = data.address;
@@ -95,14 +97,14 @@ let deleteUser = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             let user = await db.User.findOne({
-                where: { id: userId }, 
-                raw:true
+                where: { id: userId },
+                raw: true
             })
             if (user) {
                 // console.log(user)
                 await db.User.destroy({
-                    where: { id: userId }, 
-                    raw:true 
+                    where: { id: userId },
+                    raw: true
                 });
             }
             resolve();
