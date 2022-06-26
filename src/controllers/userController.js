@@ -87,10 +87,31 @@ let handleDelUser = async (req, res) => {
         message: checkAct.message,
     })
 }
+
+let handleGetAllCodes = async (req, res) => {
+    setTimeout(async () => {
+        let checkAct = await userService.getAllCodes(req.query.type);
+        if (checkAct.errCode === 0) {
+            return res.status(200).json({
+                errCode: checkAct.errCode,
+                message: checkAct.message,
+                data: checkAct.data
+            })
+        }
+    }, 2000)
+    return res.status(200).json({
+        errCode: checkAct.errCode,
+        message: checkAct.message,
+        data: {}
+    })
+}
+
 module.exports = {
     handleLogin: handleLogin,
     handleGetAllUsers: handleGetAllUsers,
     handleCreateNewUser: handleCreateNewUser,
     handleEditUser: handleEditUser,
-    handleDelUser: handleDelUser
+    handleDelUser: handleDelUser,
+
+    handleGetAllCodes: handleGetAllCodes
 }

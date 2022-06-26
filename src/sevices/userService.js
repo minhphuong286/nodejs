@@ -2,6 +2,8 @@ import db from '../models/index';
 import bcrypt from 'bcrypt';
 const salt = bcrypt.genSaltSync(10);
 
+import ld from 'lodash';
+
 let isExistUser = (email, password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -10,7 +12,7 @@ let isExistUser = (email, password) => {
 
             if (isExist) {
                 let user = await db.User.findOne({
-                    attributes: ['email', 'password', 'roleId'],
+                    attributes: ['email', 'password', 'roleId', 'firstName', 'lastName'],
                     where: { email: email },
                     raw: true
                 });
@@ -188,10 +190,46 @@ let deleteUser = (userId) => {
         }
     })
 }
+
+let getAllCodes = (typeInput) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            console.log('typeInput: ', typeInput)
+            if (!typeInput) {
+                resolve({
+                    errCode: 1,
+                    message: 'Missing input parameters'
+                })
+            } else {
+                let allcodes = await db.Allcode.findAll({
+                    where: { type: typeInput }
+                });
+                // console.log('data from service', allcodes)
+                if (ld.isEmpty(allcodes)) {
+                    resolve({
+                        errCode: 2,
+                        message: 'type is invalid'
+                    })
+                } else {
+                    resolve({
+                        errCode: 0,
+                        message: 'geted allcodes successfully',
+                        data: allcodes
+                    })
+                }
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
     isExistUser: isExistUser,
     getAllUsers: getAllUsers,
     createNewUser: createNewUser,
     editUser: editUser,
-    deleteUser: deleteUser
+    deleteUser: deleteUser,
+
+    getAllCodes: getAllCodes,
+
 }
