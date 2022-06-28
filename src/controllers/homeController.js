@@ -1,5 +1,5 @@
 import db from '../models/index';
-import CRUDService from '../sevices/CRUDService';
+import CRUDService from '../services/CRUDService';
 
 let getHomePage = async (req, res) => {
     // return res.send("Hello from controller")

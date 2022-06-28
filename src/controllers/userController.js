@@ -1,4 +1,4 @@
-import userService from '../sevices/userService';
+import userService from '../services/userService';
 
 let handleLogin = async (req, res) => {
     let email = req.body.email;
@@ -38,8 +38,8 @@ let handleGetAllUsers = async (req, res) => {
 
 let handleCreateNewUser = async (req, res) => {
     let data = req.body;
+    // console.log('check newUser controller', data)
     let newUser = await userService.createNewUser(data);
-    // console.log('check newUser controller',newUser)
     if (newUser.errCode !== 0) {
         return res.status(200).json({
             errCode: newUser.errCode,
@@ -89,16 +89,25 @@ let handleDelUser = async (req, res) => {
 }
 
 let handleGetAllCodes = async (req, res) => {
-    setTimeout(async () => {
-        let checkAct = await userService.getAllCodes(req.query.type);
-        if (checkAct.errCode === 0) {
-            return res.status(200).json({
-                errCode: checkAct.errCode,
-                message: checkAct.message,
-                data: checkAct.data
-            })
-        }
-    }, 2000)
+    // setTimeout(async () => {
+    //     let checkAct = await userService.getAllCodes(req.query.type);
+    //     if (checkAct.errCode === 0) {
+    //         return res.status(200).json({
+    //             errCode: checkAct.errCode,
+    //             message: checkAct.message,
+    //             data: checkAct.data
+    //         })
+    //     }
+    // }, 2000)
+
+    let checkAct = await userService.getAllCodes(req.query.type);
+    if (checkAct.errCode === 0) {
+        return res.status(200).json({
+            errCode: checkAct.errCode,
+            message: checkAct.message,
+            data: checkAct.data
+        })
+    }
     return res.status(200).json({
         errCode: checkAct.errCode,
         message: checkAct.message,

@@ -92,19 +92,19 @@ let createNewUser = (data) => {
         try {
             let check = await checkUserEmail(data.email);
             if (check === false) {
+                // console.log('>>>>>>>>Data prepare for create: ', data)
                 let hashPasswordByBcrypt = await hashUserPassword(data.password);
                 await db.User.create({
                     email: data.email,
                     password: hashPasswordByBcrypt,
-                    // firstName: data.firstname,
-                    // lastName: data.lastname,
                     firstName: data.firstName,
                     lastName: data.lastName,
                     address: data.address,
-                    // phonenumber: data.phoneNb,
                     phonenumber: data.phoneNb,
-                    gender: data.gender === '1' ? true : false,
-                    roleId: data.role
+                    gender: data.gender,
+                    roleId: data.role,
+                    positionId: data.position,
+                    image: data.avatar
                 })
                 resolve({
                     errCode: 0,
@@ -148,6 +148,13 @@ let editUser = (data) => {
                 user.firstName = data.firstName;
                 user.lastName = data.lastName;
                 user.address = data.address;
+                user.phonenumber = data.phonenumber;
+                user.gender = data.gender;
+                user.positionId = data.positionId;
+                user.roleId = data.roleId;
+                if (data.avatar) {
+                    user.image = data.avatar;
+                }
                 await user.save();
 
                 resolve({
@@ -213,7 +220,7 @@ let getAllCodes = (typeInput) => {
                 } else {
                     resolve({
                         errCode: 0,
-                        message: 'geted allcodes successfully',
+                        message: 'Got allcodes successfully',
                         data: allcodes
                     })
                 }
