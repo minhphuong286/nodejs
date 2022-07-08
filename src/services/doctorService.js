@@ -54,18 +54,31 @@ let getAllDoctors = () => {
 let saveInforDoctor = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.doctorId || !data.contentHTML || !data.contentMarkdown) {
+            if (!data.doctorId || !data.contentHTML || !data.contentMarkdown || !data.action) {
                 resolve({
                     errCode: 1,
                     message: 'Missing infor doctors'
                 })
             } else {
-                await db.Markdown.create({
-                    contentHTML: data.contentHTML,
-                    contentMarkdown: data.contentMarkdown,
-                    description: data.description,
-                    doctorId: data.doctorId,
-                })
+                if (data.action === 'EDIT') {
+                    let doctorMardown = await db.Markdown.findOne({
+                        where: { doctorId: data.doctorId }, raw: false
+                    })
+                    if (doctorMardown) {
+                        doctorMardown.contentHTML = data.contentHTML;
+                        doctorMardown.contentMarkdown = data.contentMarkdown;
+                        doctorMardown.description = data.description;
+                        await doctorMardown.save();
+                    }
+                } else if (data.action === 'CREATE') {
+                    await db.Markdown.create({
+                        contentHTML: data.contentHTML,
+                        contentMarkdown: data.contentMarkdown,
+                        description: data.description,
+                        doctorId: data.doctorId,
+                    })
+                }
+
                 resolve({
                     errCode: 0,
                     message: 'Save infor doctor successfully'
@@ -90,7 +103,7 @@ let getDetailDoctorById = (doctorId) => {
                 let data = await db.User.findOne({
                     where: { id: doctorId },
                     attributes: {
-                        exclude: ['password', 'image']
+                        exclude: ['password']
                     },
                     include: [
                         {
@@ -100,9 +113,13 @@ let getDetailDoctorById = (doctorId) => {
                         { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
 
                     ],
-                    raw: true,
+                    raw: false,
                     nest: true
                 })
+                if (data && data.image) {
+                    data.image = new Buffer(data.image, 'base64').toString('binary');
+                }
+                if (!data) data = {};
                 resolve({
                     errCode: 0,
                     data: data,
